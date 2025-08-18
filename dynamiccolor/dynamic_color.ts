@@ -20,7 +20,6 @@ import {Hct} from '../hct/hct.js';
 import type {TonalPalette} from '../palettes/tonal_palette';
 import * as math from '../utils/math_utils.js';
 
-import type {SpecVersion} from './color_spec';
 import {ContrastCurve} from './contrast_curve.js';
 import {DynamicScheme} from './dynamic_scheme.js';
 import {ToneDeltaPair} from './tone_delta_pair.js';
@@ -75,13 +74,11 @@ interface ColorCalculationDelegate {
 }
 
 function validateExtendedColor(
-    originalColor: DynamicColor, specVersion: SpecVersion,
-    extendedColor: DynamicColor) {
+    originalColor: DynamicColor, extendedColor: DynamicColor) {
   if (originalColor.name !== extendedColor.name) {
     throw new Error(
         `Attempting to extend color ${originalColor.name} with color ${
-            extendedColor.name} of different name for spec version ${
-            specVersion}.`);
+            extendedColor.name} of different name.`);
   }
   if (originalColor.isBackground !== extendedColor.isBackground) {
     throw new Error(`Attempting to extend color ${originalColor.name} as a ${
@@ -90,7 +87,7 @@ function validateExtendedColor(
              'foreground')} with color ${extendedColor.name} as a ${
         (extendedColor.isBackground ?
              'background' :
-             'foreground')} for spec version ${specVersion}.`);
+             'foreground')}.`);
   }
 }
 /**
@@ -102,45 +99,33 @@ function validateExtendedColor(
  * @param extendedColor The color with the values to extend.
  */
 export function extendSpecVersion(
-    originlColor: DynamicColor, specVersion: SpecVersion,
+    originlColor: DynamicColor,
     extendedColor: DynamicColor): DynamicColor {
-  validateExtendedColor(originlColor, specVersion, extendedColor);
+  validateExtendedColor(originlColor, extendedColor);
 
   return DynamicColor.fromPalette({
     name: originlColor.name,
-    palette: (s) => s.specVersion === specVersion ? extendedColor.palette(s) :
-                                                    originlColor.palette(s),
-    tone: (s) => s.specVersion === specVersion ? extendedColor.tone(s) :
-                                                 originlColor.tone(s),
+    palette: (s) => extendedColor.palette(s),
+    tone: (s) => extendedColor.tone(s),
     isBackground: originlColor.isBackground,
     chromaMultiplier: (s) => {
-      const chromaMultiplier = s.specVersion === specVersion ?
-          extendedColor.chromaMultiplier :
-          originlColor.chromaMultiplier;
+      const chromaMultiplier = extendedColor.chromaMultiplier;
       return chromaMultiplier !== undefined ? chromaMultiplier(s) : 1;
     },
     background: (s) => {
-      const background = s.specVersion === specVersion ?
-          extendedColor.background :
-          originlColor.background;
+      const background = extendedColor.background
       return background !== undefined ? background(s) : undefined
     },
     secondBackground: (s) => {
-      const secondBackground = s.specVersion === specVersion ?
-          extendedColor.secondBackground :
-          originlColor.secondBackground;
+      const secondBackground = extendedColor.secondBackground;
       return secondBackground !== undefined ? secondBackground(s) : undefined;
     },
     contrastCurve: (s) => {
-      const contrastCurve = s.specVersion === specVersion ?
-          extendedColor.contrastCurve :
-          originlColor.contrastCurve;
+      const contrastCurve = extendedColor.contrastCurve;
       return contrastCurve !== undefined ? contrastCurve(s) : undefined;
     },
     toneDeltaPair: (s) => {
-      const toneDeltaPair = s.specVersion === specVersion ?
-          extendedColor.toneDeltaPair :
-          originlColor.toneDeltaPair;
+      const toneDeltaPair = extendedColor.toneDeltaPair;
       return toneDeltaPair !== undefined ? toneDeltaPair(s) : undefined;
     },
   });
@@ -302,7 +287,7 @@ export class DynamicColor {
     if (cachedAnswer != null) {
       return cachedAnswer;
     }
-    const answer = getSpec(scheme.specVersion).getHct(scheme, this);
+    const answer = getSpec().getHct(scheme, this);
     if (this.hctCache.size > 4) {
       this.hctCache.clear();
     }
@@ -319,7 +304,7 @@ export class DynamicColor {
    *     contrast level is.
    */
   getTone(scheme: DynamicScheme): number {
-    return getSpec(scheme.specVersion).getTone(scheme, this);
+    return getSpec().getTone(scheme, this);
   }
 
   /**
@@ -393,192 +378,6 @@ export class DynamicColor {
       return 49.0;
     }
     return tone;
-  }
-}
-
-/**
- * A delegate for the color calculation of a DynamicScheme in the 2021 spec.
- */
-class ColorCalculationDelegateImpl2021 implements ColorCalculationDelegate {
-  getHct(scheme: DynamicScheme, color: DynamicColor): Hct {
-    const tone = color.getTone(scheme);
-    const palette = color.palette(scheme);
-    return palette.getHct(tone);
-  }
-
-  getTone(scheme: DynamicScheme, color: DynamicColor): number {
-    const decreasingContrast = scheme.contrastLevel < 0;
-    const toneDeltaPair =
-        color.toneDeltaPair ? color.toneDeltaPair(scheme) : undefined;
-
-    // Case 1: dual foreground, pair of colors with delta constraint.
-    if (toneDeltaPair) {
-      const roleA = toneDeltaPair.roleA;
-      const roleB = toneDeltaPair.roleB;
-      const delta = toneDeltaPair.delta;
-      const polarity = toneDeltaPair.polarity;
-      const stayTogether = toneDeltaPair.stayTogether;
-
-      const aIsNearer =
-          (polarity === 'nearer' ||
-           (polarity === 'lighter' && !scheme.isDark) ||
-           (polarity === 'darker' && scheme.isDark));
-      const nearer = aIsNearer ? roleA : roleB;
-      const farther = aIsNearer ? roleB : roleA;
-      const amNearer = color.name === nearer.name;
-      const expansionDir = scheme.isDark ? 1 : -1;
-      let nTone = nearer.tone(scheme);
-      let fTone = farther.tone(scheme);
-
-      // 1st round: solve to min for each, if background and contrast curve
-      // are defined.
-      if (color.background && nearer.contrastCurve && farther.contrastCurve) {
-        const bg = color.background(scheme);
-        const nContrastCurve = nearer.contrastCurve(scheme);
-        const fContrastCurve = farther.contrastCurve(scheme);
-        if (bg && nContrastCurve && fContrastCurve) {
-          const bgTone = bg.getTone(scheme);
-          const nContrast = nContrastCurve.get(scheme.contrastLevel);
-          const fContrast = fContrastCurve.get(scheme.contrastLevel);
-          // If a color is good enough, it is not adjusted.
-          // Initial and adjusted tones for `nearer`
-          if (Contrast.ratioOfTones(bgTone, nTone) < nContrast) {
-            nTone = DynamicColor.foregroundTone(bgTone, nContrast);
-          }
-          // Initial and adjusted tones for `farther`
-          if (Contrast.ratioOfTones(bgTone, fTone) < fContrast) {
-            fTone = DynamicColor.foregroundTone(bgTone, fContrast);
-          }
-          if (decreasingContrast) {
-            // If decreasing contrast, adjust color to the "bare minimum"
-            // that satisfies contrast.
-            nTone = DynamicColor.foregroundTone(bgTone, nContrast);
-            fTone = DynamicColor.foregroundTone(bgTone, fContrast);
-          }
-        }
-      }
-
-      if ((fTone - nTone) * expansionDir < delta) {
-        // 2nd round: expand farther to match delta, if contrast is not
-        // satisfied.
-        fTone = math.clampDouble(0, 100, nTone + delta * expansionDir);
-        if ((fTone - nTone) * expansionDir >= delta) {
-          // Good! Tones now satisfy the constraint; no change needed.
-        } else {
-          // 3rd round: contract nearer to match delta.
-          nTone = math.clampDouble(0, 100, fTone - delta * expansionDir);
-        }
-      }
-
-      // Avoids the 50-59 awkward zone.
-      if (50 <= nTone && nTone < 60) {
-        // If `nearer` is in the awkward zone, move it away, together with
-        // `farther`.
-        if (expansionDir > 0) {
-          nTone = 60;
-          fTone = Math.max(fTone, nTone + delta * expansionDir);
-        } else {
-          nTone = 49;
-          fTone = Math.min(fTone, nTone + delta * expansionDir);
-        }
-      } else if (50 <= fTone && fTone < 60) {
-        if (stayTogether) {
-          // Fixes both, to avoid two colors on opposite sides of the "awkward
-          // zone".
-          if (expansionDir > 0) {
-            nTone = 60;
-            fTone = Math.max(fTone, nTone + delta * expansionDir);
-          } else {
-            nTone = 49;
-            fTone = Math.min(fTone, nTone + delta * expansionDir);
-          }
-        } else {
-          // Not required to stay together; fixes just one.
-          if (expansionDir > 0) {
-            fTone = 60;
-          } else {
-            fTone = 49;
-          }
-        }
-      }
-
-      // Returns `nTone` if this color is `nearer`, otherwise `fTone`.
-      return amNearer ? nTone : fTone;
-    } else {
-      // Case 2: No contrast pair; just solve for itself.
-      let answer = color.tone(scheme);
-
-      if (color.background == undefined ||
-          color.background(scheme) === undefined ||
-          color.contrastCurve == undefined ||
-          color.contrastCurve(scheme) === undefined) {
-        return answer;  // No adjustment for colors with no background.
-      }
-
-      const bgTone = color.background(scheme)!.getTone(scheme);
-      const desiredRatio =
-          color.contrastCurve(scheme)!.get(scheme.contrastLevel);
-
-      if (Contrast.ratioOfTones(bgTone, answer) >= desiredRatio) {
-        // Don't "improve" what's good enough.
-      } else {
-        // Rough improvement.
-        answer = DynamicColor.foregroundTone(bgTone, desiredRatio);
-      }
-
-      if (decreasingContrast) {
-        answer = DynamicColor.foregroundTone(bgTone, desiredRatio);
-      }
-
-      if (color.isBackground && 50 <= answer && answer < 60) {
-        // Must adjust
-        if (Contrast.ratioOfTones(49, bgTone) >= desiredRatio) {
-          answer = 49;
-        } else {
-          answer = 60;
-        }
-      }
-
-      if (color.secondBackground == undefined ||
-          color.secondBackground(scheme) === undefined) {
-        return answer;
-      }
-
-      // Case 3: Adjust for dual backgrounds.
-      const [bg1, bg2] = [color.background, color.secondBackground];
-      const [bgTone1, bgTone2] =
-          [bg1(scheme)!.getTone(scheme), bg2(scheme)!.getTone(scheme)];
-      const [upper, lower] =
-          [Math.max(bgTone1, bgTone2), Math.min(bgTone1, bgTone2)];
-
-      if (Contrast.ratioOfTones(upper, answer) >= desiredRatio &&
-          Contrast.ratioOfTones(lower, answer) >= desiredRatio) {
-        return answer;
-      }
-
-      // The darkest light tone that satisfies the desired ratio,
-      // or -1 if such ratio cannot be reached.
-      const lightOption = Contrast.lighter(upper, desiredRatio);
-
-      // The lightest dark tone that satisfies the desired ratio,
-      // or -1 if such ratio cannot be reached.
-      const darkOption = Contrast.darker(lower, desiredRatio);
-
-      // Tones suitable for the foreground.
-      const availables = [];
-      if (lightOption !== -1) availables.push(lightOption);
-      if (darkOption !== -1) availables.push(darkOption);
-
-      const prefersLight = DynamicColor.tonePrefersLightForeground(bgTone1) ||
-          DynamicColor.tonePrefersLightForeground(bgTone2);
-      if (prefersLight) {
-        return (lightOption < 0) ? 100 : lightOption;
-      }
-      if (availables.length === 1) {
-        return availables[0];
-      }
-      return (darkOption < 0) ? 0 : darkOption;
-    }
   }
 }
 
@@ -741,12 +540,11 @@ class ColorCalculationDelegateImpl2025 implements ColorCalculationDelegate {
   }
 }
 
-const spec2021 = new ColorCalculationDelegateImpl2021();
 const spec2025 = new ColorCalculationDelegateImpl2025();
 
 /**
  * Returns the ColorCalculationDelegate for the given spec version.
  */
-function getSpec(specVersion: SpecVersion): ColorCalculationDelegate {
-  return specVersion === '2025' ? spec2025 : spec2021;
+function getSpec(): ColorCalculationDelegate {
+  return spec2025;
 }

@@ -15,12 +15,8 @@
  * limitations under the License.
  */
 
-import {ColorSpecDelegateImpl2021} from './color_spec_2021.js';
-import {ColorSpecDelegateImpl2025} from './color_spec_2025.js';
 import type {DynamicColor} from './dynamic_color';
 import {DynamicScheme} from './dynamic_scheme';
-
-export type SpecVersion = '2021'|'2025';
 
 /**
  * A delegate that provides the dynamic color constraints for
@@ -189,21 +185,4 @@ export interface ColorSpecDelegate {
   ////////////////////////////////////////////////////////////////
 
   highestSurface: (s: DynamicScheme) => DynamicColor;
-}
-
-export const spec_2021 = new ColorSpecDelegateImpl2021();
-export const spec_2025 = new ColorSpecDelegateImpl2025();
-
-/**
- * Returns the ColorSpecDelegate for the given spec version.
- */
-export function getSpec(specVersion: SpecVersion): ColorSpecDelegate {
-  switch (specVersion) {
-    case '2021':
-      return spec_2021;
-    case '2025':
-      return spec_2025;
-    default:
-      throw new Error(`Unsupported spec version: ${specVersion}`);
-  }
 }

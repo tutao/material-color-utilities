@@ -19,7 +19,6 @@ import {Hct} from '../hct/hct.js';
 import {TonalPalette} from '../palettes/tonal_palette.js';
 import * as math from '../utils/math_utils.js';
 
-import {SpecVersion} from './color_spec.js';
 import {DynamicColor} from './dynamic_color.js';
 import {MaterialDynamicColors} from './material_dynamic_colors.js';
 
@@ -55,7 +54,6 @@ interface DynamicSchemeOptions {
   sourceColorHct: Hct;
   contrastLevel: number;
   isDark: boolean;
-  specVersion?: SpecVersion;
   primaryPalette?: TonalPalette;
   secondaryPalette?: TonalPalette;
   tertiaryPalette?: TonalPalette;
@@ -122,9 +120,6 @@ export class DynamicScheme {
   /** Whether the scheme is in dark mode or light mode. */
   readonly isDark: boolean;
 
-  /** The version of the design spec that this scheme is based on. */
-  readonly specVersion: SpecVersion;
-
   /**
    * Given a tone, produces a color. Hue and chroma of the
    * color are specified in the design specification of the variant. Usually
@@ -172,30 +167,29 @@ export class DynamicScheme {
     this.sourceColorArgb = args.sourceColorHct.toInt();
     this.contrastLevel = args.contrastLevel;
     this.isDark = args.isDark;
-    this.specVersion = args.specVersion ?? '2021';
     this.sourceColorHct = args.sourceColorHct;
     this.primaryPalette = args.primaryPalette ??
-        getSpec(this.specVersion)
+        getSpec()
             .getPrimaryPalette(
                 args.sourceColorHct, this.isDark, this.contrastLevel);
     this.secondaryPalette = args.secondaryPalette ??
-        getSpec(this.specVersion)
+        getSpec()
             .getSecondaryPalette(
                 args.sourceColorHct, this.isDark, this.contrastLevel);
     this.tertiaryPalette = args.tertiaryPalette ??
-        getSpec(this.specVersion)
+        getSpec()
             .getTertiaryPalette(
                 args.sourceColorHct, this.isDark, this.contrastLevel);
     this.neutralPalette = args.neutralPalette ??
-        getSpec(this.specVersion)
+        getSpec()
             .getNeutralPalette(
                 args.sourceColorHct, this.isDark, this.contrastLevel);
     this.neutralVariantPalette = args.neutralVariantPalette ??
-        getSpec(this.specVersion)
+        getSpec()
             .getNeutralVariantPalette(
                 args.sourceColorHct, this.isDark, this.contrastLevel);
     this.errorPalette = args.errorPalette ??
-        getSpec(this.specVersion)
+        getSpec()
             .getErrorPalette(
                 args.sourceColorHct, this.isDark, this.contrastLevel) ??
         TonalPalette.fromHueAndChroma(25.0, 84.0);
@@ -207,8 +201,7 @@ export class DynamicScheme {
     return `Scheme: ` +
         `mode=${this.isDark ? 'dark' : 'light'}, ` +
         `contrastLevel=${this.contrastLevel.toFixed(1)}, ` +
-        `seed=${this.sourceColorHct.toString()}, ` +
-        `specVersion=${this.specVersion}`
+        `seed=${this.sourceColorHct.toString()}, `
   }
 
   /**
@@ -552,9 +545,9 @@ export class DynamicScheme {
 }
 
 /**
- * A delegate for the palettes of a DynamicScheme in the 2021 spec.
+ * A delegate for the palettes of a DynamicScheme in the 2025 spec.
  */
-class DynamicSchemePalettesDelegateImpl2021 implements
+class DynamicSchemePalettesDelegateImpl2025 implements
     DynamicSchemePalettesDelegate {
   //////////////////////////////////////////////////////////////////
   // Scheme Palettes                                              //
@@ -563,58 +556,12 @@ class DynamicSchemePalettesDelegateImpl2021 implements
   getPrimaryPalette(
        sourceColorHct: Hct, isDark: boolean,
       contrastLevel: number): TonalPalette {
-    return TonalPalette.fromHueAndChroma(sourceColorHct.hue, 12.0);
-  }
-
-  getSecondaryPalette(
-       sourceColorHct: Hct, isDark: boolean,
-      contrastLevel: number): TonalPalette {
-    return TonalPalette.fromHueAndChroma(sourceColorHct.hue, 8.0);
-  }
-
-  getTertiaryPalette(
-       sourceColorHct: Hct, isDark: boolean,
-      contrastLevel: number): TonalPalette {
-    return TonalPalette.fromHueAndChroma(sourceColorHct.hue, 16.0);
-  }
-
-  getNeutralPalette(
-       sourceColorHct: Hct, isDark: boolean,
-      contrastLevel: number): TonalPalette {
-    return TonalPalette.fromHueAndChroma(sourceColorHct.hue, 2.0);
-  }
-
-  getNeutralVariantPalette(
-       sourceColorHct: Hct, isDark: boolean,
-      contrastLevel: number): TonalPalette {
-    return TonalPalette.fromHueAndChroma(sourceColorHct.hue, 2.0);
-  }
-
-  getErrorPalette(
-       sourceColorHct: Hct, isDark: boolean,
-      contrastLevel: number): TonalPalette|undefined {
-    return undefined;
-  }
-}
-
-/**
- * A delegate for the palettes of a DynamicScheme in the 2025 spec.
- */
-class DynamicSchemePalettesDelegateImpl2025 extends
-    DynamicSchemePalettesDelegateImpl2021 {
-  //////////////////////////////////////////////////////////////////
-  // Scheme Palettes                                              //
-  //////////////////////////////////////////////////////////////////
-
-  override getPrimaryPalette(
-       sourceColorHct: Hct, isDark: boolean,
-      contrastLevel: number): TonalPalette {
     return TonalPalette.fromHueAndChroma(
         sourceColorHct.hue,
         (Hct.isBlue(sourceColorHct.hue) ? 12 : 8));
   }
 
-  override getSecondaryPalette(
+  getSecondaryPalette(
        sourceColorHct: Hct, isDark: boolean,
       contrastLevel: number): TonalPalette {
     return TonalPalette.fromHueAndChroma(
@@ -622,7 +569,7 @@ class DynamicSchemePalettesDelegateImpl2025 extends
         (Hct.isBlue(sourceColorHct.hue) ? 6 : 4));
   }
 
-  override getTertiaryPalette(
+  getTertiaryPalette(
        sourceColorHct: Hct, isDark: boolean,
       contrastLevel: number): TonalPalette {
     return TonalPalette.fromHueAndChroma(
@@ -633,21 +580,21 @@ class DynamicSchemePalettesDelegateImpl2025 extends
   }
 
 
-  override getNeutralPalette(
+  getNeutralPalette(
        sourceColorHct: Hct, isDark: boolean,
       contrastLevel: number): TonalPalette {
     return TonalPalette.fromHueAndChroma(
         sourceColorHct.hue, 1.4);
   }
 
-  override getNeutralVariantPalette(
+  getNeutralVariantPalette(
        sourceColorHct: Hct, isDark: boolean,
       contrastLevel: number): TonalPalette {
     return TonalPalette.fromHueAndChroma(
         sourceColorHct.hue, 1.4 * 2.2);
   }
 
-  override getErrorPalette(
+  getErrorPalette(
        sourceColorHct: Hct, isDark: boolean,
       contrastLevel: number): TonalPalette|undefined {
     const errorHue = DynamicScheme.getPiecewiseHue(
@@ -658,13 +605,11 @@ class DynamicSchemePalettesDelegateImpl2025 extends
   }
 }
 
-const spec2021 = new DynamicSchemePalettesDelegateImpl2021();
 const spec2025 = new DynamicSchemePalettesDelegateImpl2025();
 
 /**
  * Returns the DynamicSchemePalettesDelegate for the given spec version.
  */
-function getSpec(specVersion: SpecVersion):
-    DynamicSchemePalettesDelegate {
-  return specVersion === '2025' ? spec2025 : spec2021;
+function getSpec(): DynamicSchemePalettesDelegate {
+  return spec2025;
 }

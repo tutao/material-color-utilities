@@ -136,7 +136,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             },
             isBackground: true,
         });
-        return extendSpecVersion(super.surface(), '2025', color2025);
+        return extendSpecVersion(super.surface(), color2025);
     }
 
     override surfaceDim(): DynamicColor {
@@ -162,7 +162,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1;
             },
         });
-        return extendSpecVersion(super.surfaceDim(), '2025', color2025);
+        return extendSpecVersion(super.surfaceDim(), color2025);
     }
 
     override surfaceBright(): DynamicColor {
@@ -188,7 +188,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1;
             },
         });
-        return extendSpecVersion(super.surfaceBright(), '2025', color2025);
+        return extendSpecVersion(super.surfaceBright(), color2025);
     }
 
     override surfaceContainerLowest(): DynamicColor {
@@ -198,7 +198,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             tone: (s) => s.isDark ? 0 : 100,
             isBackground: true,
         });
-        return extendSpecVersion(super.surfaceContainerLowest(), '2025', color2025);
+        return extendSpecVersion(super.surfaceContainerLowest(), color2025);
     }
 
     override surfaceContainerLow(): DynamicColor {
@@ -221,7 +221,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1.3;
             },
         });
-        return extendSpecVersion(super.surfaceContainerLow(), '2025', color2025);
+        return extendSpecVersion(super.surfaceContainerLow(), color2025);
     }
 
     override surfaceContainer(): DynamicColor {
@@ -244,7 +244,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1.6;
             },
         });
-        return extendSpecVersion(super.surfaceContainer(), '2025', color2025);
+        return extendSpecVersion(super.surfaceContainer(), color2025);
     }
 
     override surfaceContainerHigh(): DynamicColor {
@@ -267,7 +267,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1.9;
             },
         });
-        return extendSpecVersion(super.surfaceContainerHigh(), '2025', color2025);
+        return extendSpecVersion(super.surfaceContainerHigh(), color2025);
     }
 
     override surfaceContainerHighest(): DynamicColor {
@@ -291,7 +291,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             },
         });
         return extendSpecVersion(
-            super.surfaceContainerHighest(), '2025', color2025);
+            super.surfaceContainerHighest(), color2025);
     }
 
     override onSurface(): DynamicColor {
@@ -308,7 +308,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => s.isDark ? getCurve(11) : getCurve(9),
         });
-        return extendSpecVersion(super.onSurface(), '2025', color2025);
+        return extendSpecVersion(super.onSurface(), color2025);
     }
 
     override onSurfaceVariant(): DynamicColor {
@@ -321,7 +321,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => (s.isDark ? getCurve(6) : getCurve(4.5))
         });
-        return extendSpecVersion(super.onSurfaceVariant(), '2025', color2025);
+        return extendSpecVersion(super.onSurfaceVariant(), color2025);
     }
 
     override outline(): DynamicColor {
@@ -334,7 +334,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => getCurve(3),
         });
-        return extendSpecVersion(super.outline(), '2025', color2025);
+        return extendSpecVersion(super.outline(), color2025);
     }
 
     override outlineVariant(): DynamicColor {
@@ -347,7 +347,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => getCurve(1.5),
         });
-        return extendSpecVersion(super.outlineVariant(), '2025', color2025);
+        return extendSpecVersion(super.outlineVariant(), color2025);
     }
 
     override inverseSurface(): DynamicColor {
@@ -357,7 +357,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             tone: (s) => s.isDark ? 98 : 4,
             isBackground: true,
         });
-        return extendSpecVersion(super.inverseSurface(), '2025', color2025);
+        return extendSpecVersion(super.inverseSurface(), color2025);
     }
 
     override inverseOnSurface(): DynamicColor {
@@ -367,7 +367,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.inverseSurface(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.inverseOnSurface(), '2025', color2025);
+        return extendSpecVersion(super.inverseOnSurface(), color2025);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -388,7 +388,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.primaryContainer(), this.primary(), 5, 'relative_lighter',
                 true, 'farther'),
         });
-        return extendSpecVersion(super.primary(), '2025', color2025);
+        return extendSpecVersion(super.primary(), color2025);
     }
 
     override primaryDim(): DynamicColor {
@@ -413,7 +413,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.primary(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onPrimary(), '2025', color2025);
+        return extendSpecVersion(super.onPrimary(), color2025);
     }
 
     override primaryContainer(): DynamicColor {
@@ -430,7 +430,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.primaryContainer(), '2025', color2025);
+        return extendSpecVersion(super.primaryContainer(), color2025);
     }
 
     override onPrimaryContainer(): DynamicColor {
@@ -440,7 +440,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.primaryContainer(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onPrimaryContainer(), '2025', color2025);
+        return extendSpecVersion(super.onPrimaryContainer(), color2025);
     }
 
     override primaryFixed(): DynamicColor {
@@ -457,7 +457,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.primaryFixed(), '2025', color2025);
+        return extendSpecVersion(super.primaryFixed(), color2025);
     }
 
     override primaryFixedDim(): DynamicColor {
@@ -470,7 +470,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.primaryFixedDim(), this.primaryFixed(), 5, 'darker', true,
                 'exact'),
         });
-        return extendSpecVersion(super.primaryFixedDim(), '2025', color2025);
+        return extendSpecVersion(super.primaryFixedDim(), color2025);
     }
 
     override onPrimaryFixed(): DynamicColor {
@@ -480,7 +480,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.primaryFixedDim(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.onPrimaryFixed(), '2025', color2025);
+        return extendSpecVersion(super.onPrimaryFixed(), color2025);
     }
 
     override onPrimaryFixedVariant(): DynamicColor {
@@ -490,7 +490,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.primaryFixedDim(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(super.onPrimaryFixedVariant(), '2025', color2025);
+        return extendSpecVersion(super.onPrimaryFixedVariant(), color2025);
     }
 
     override inversePrimary(): DynamicColor {
@@ -501,7 +501,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.inverseSurface(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.inversePrimary(), '2025', color2025);
+        return extendSpecVersion(super.inversePrimary(), color2025);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -523,7 +523,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.secondaryContainer(), this.secondary(), 5,
                 'relative_lighter', true, 'farther')
         });
-        return extendSpecVersion(super.secondary(), '2025', color2025);
+        return extendSpecVersion(super.secondary(), color2025);
     }
 
     override secondaryDim(): DynamicColor {
@@ -548,7 +548,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.secondary(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onSecondary(), '2025', color2025);
+        return extendSpecVersion(super.onSecondary(), color2025);
     }
 
     override secondaryContainer(): DynamicColor {
@@ -565,7 +565,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.secondaryContainer(), '2025', color2025);
+        return extendSpecVersion(super.secondaryContainer(), color2025);
     }
 
     override onSecondaryContainer(): DynamicColor {
@@ -575,7 +575,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.secondaryContainer(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onSecondaryContainer(), '2025', color2025);
+        return extendSpecVersion(super.onSecondaryContainer(), color2025);
     }
 
     override secondaryFixed(): DynamicColor {
@@ -592,7 +592,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.secondaryFixed(), '2025', color2025);
+        return extendSpecVersion(super.secondaryFixed(), color2025);
     }
 
     override secondaryFixedDim(): DynamicColor {
@@ -605,7 +605,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.secondaryFixedDim(), this.secondaryFixed(), 5, 'darker', true,
                 'exact'),
         });
-        return extendSpecVersion(super.secondaryFixedDim(), '2025', color2025);
+        return extendSpecVersion(super.secondaryFixedDim(), color2025);
     }
 
     override onSecondaryFixed(): DynamicColor {
@@ -615,7 +615,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.secondaryFixedDim(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.onSecondaryFixed(), '2025', color2025);
+        return extendSpecVersion(super.onSecondaryFixed(), color2025);
     }
 
     override onSecondaryFixedVariant(): DynamicColor {
@@ -626,7 +626,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             contrastCurve: (s) => getCurve(4.5),
         });
         return extendSpecVersion(
-            super.onSecondaryFixedVariant(), '2025', color2025);
+            super.onSecondaryFixedVariant(), color2025);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -650,7 +650,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                     this.tertiaryContainer(), this.tertiary(), 5, 'relative_lighter',
                     true, 'farther')
         });
-        return extendSpecVersion(super.tertiary(), '2025', color2025);
+        return extendSpecVersion(super.tertiary(), color2025);
     }
 
     override tertiaryDim(): DynamicColor {
@@ -675,7 +675,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.tertiary(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onTertiary(), '2025', color2025);
+        return extendSpecVersion(super.onTertiary(), color2025);
     }
 
     override tertiaryContainer(): DynamicColor {
@@ -693,7 +693,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.tertiaryContainer(), '2025', color2025);
+        return extendSpecVersion(super.tertiaryContainer(), color2025);
     }
 
     override onTertiaryContainer(): DynamicColor {
@@ -703,7 +703,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.tertiaryContainer(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onTertiaryContainer(), '2025', color2025);
+        return extendSpecVersion(super.onTertiaryContainer(), color2025);
     }
 
     override tertiaryFixed(): DynamicColor {
@@ -720,7 +720,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.tertiaryFixed(), '2025', color2025);
+        return extendSpecVersion(super.tertiaryFixed(), color2025);
     }
 
     override tertiaryFixedDim(): DynamicColor {
@@ -733,7 +733,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.tertiaryFixedDim(), this.tertiaryFixed(), 5, 'darker', true,
                 'exact'),
         });
-        return extendSpecVersion(super.tertiaryFixedDim(), '2025', color2025);
+        return extendSpecVersion(super.tertiaryFixedDim(), color2025);
     }
 
     override onTertiaryFixed(): DynamicColor {
@@ -743,7 +743,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.tertiaryFixedDim(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.onTertiaryFixed(), '2025', color2025);
+        return extendSpecVersion(super.onTertiaryFixed(), color2025);
     }
 
     override onTertiaryFixedVariant(): DynamicColor {
@@ -753,7 +753,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.tertiaryFixedDim(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(super.onTertiaryFixedVariant(), '2025', color2025);
+        return extendSpecVersion(super.onTertiaryFixedVariant(), color2025);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -775,7 +775,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.errorContainer(), this.error(), 5, 'relative_lighter', true,
                 'farther')
         });
-        return extendSpecVersion(super.error(), '2025', color2025);
+        return extendSpecVersion(super.error(), color2025);
     }
 
     override errorDim(): DynamicColor {
@@ -798,7 +798,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.error(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onError(), '2025', color2025);
+        return extendSpecVersion(super.onError(), color2025);
     }
 
     override errorContainer(): DynamicColor {
@@ -816,7 +816,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.errorContainer(), '2025', color2025);
+        return extendSpecVersion(super.errorContainer(), color2025);
     }
 
     override onErrorContainer(): DynamicColor {
@@ -826,7 +826,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.errorContainer(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(super.onErrorContainer(), '2025', color2025);
+        return extendSpecVersion(super.onErrorContainer(), color2025);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -836,24 +836,24 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
     override surfaceVariant(): DynamicColor {
         const color2025: DynamicColor = Object.assign(
             this.surfaceContainerHighest().clone(), {name: 'surface_variant'});
-        return extendSpecVersion(super.surfaceVariant(), '2025', color2025);
+        return extendSpecVersion(super.surfaceVariant(), color2025);
     }
 
     override surfaceTint(): DynamicColor {
         const color2025: DynamicColor =
             Object.assign(this.primary().clone(), {name: 'surface_tint'});
-        return extendSpecVersion(super.surfaceTint(), '2025', color2025);
+        return extendSpecVersion(super.surfaceTint(), color2025);
     }
 
     override background(): DynamicColor {
         const color2025: DynamicColor =
             Object.assign(this.surface().clone(), {name: 'background'});
-        return extendSpecVersion(super.background(), '2025', color2025);
+        return extendSpecVersion(super.background(), color2025);
     }
 
     override onBackground(): DynamicColor {
         const color2025: DynamicColor =
             Object.assign(this.onSurface().clone(), {name: 'on_background'});
-        return extendSpecVersion(super.onBackground(), '2025', color2025);
+        return extendSpecVersion(super.onBackground(), color2025);
     }
 }
