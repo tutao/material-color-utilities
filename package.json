@@ -30,8 +30,7 @@
     "**/*.js",
     "**/*.js.map",
     "**/*.d.ts",
-    "!**/*_test.*",
-    "!.wireit/**"
+    "!**/*_test.*"
   ],
   "main": "index.js",
   "module": "index.js",
@@ -44,31 +43,12 @@
     }
   },
   "scripts": {
-    "build": "wireit",
-    "build:ts": "wireit",
+    "build": "tsc --pretty",
+    "build:ts": "tsc --pretty",
     "prepublishOnly": "npm run build"
-  },
-  "wireit": {
-    "build": {
-      "dependencies": ["build:ts"]
-    },
-    "build:ts": {
-      "command": "tsc --pretty",
-      "files": ["tsconfig.json", "**/*.ts", "!**/*.d.ts"],
-      "output": [
-        ".tsbuildinfo",
-        "**/*.js",
-        "**/*.js.map",
-        "**/*.d.ts",
-        "!*.js",
-        "!types/"
-      ],
-      "clean": "if-file-deleted"
-    }
   },
   "devDependencies": {
     "@types/node": "^18.7.17",
-    "typescript": "^4.5.5",
-    "wireit": "^0.9.5"
+    "typescript": "^4.5.5"
   }
 }
