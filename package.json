@@ -26,6 +26,7 @@
   "homepage": "https://github.com/material-foundation/material-color-utilities/tree/main/typescript",
   "type": "module",
   "files": [
+    "**/*.ts",
     "**/*.js",
     "**/*.js.map",
     "**/*.d.ts",
