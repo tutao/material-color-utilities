@@ -30,7 +30,7 @@ import {Variant} from './variant.js';
  * The platform on which this scheme is intended to be used. Only used in the
  * 2025 spec.
  */
-export type Platform = 'phone'|'watch';
+export type Platform = 'phone';
 
 /**
  * @param sourceColorArgb The source color of the theme as an ARGB 32-bit

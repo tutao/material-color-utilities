@@ -602,9 +602,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       name: 'primary_container',
       palette: (s) => s.primaryPalette,
       tone: (s) => {
-        if (s.platform === 'watch') {
-          return 30;
-        } else if (s.variant === Variant.NEUTRAL) {
+        if (s.variant === Variant.NEUTRAL) {
           return s.isDark ? 30 : 90;
         } else if (s.variant === Variant.TONAL_SPOT) {
           return s.isDark ? tMinC(s.primaryPalette, 35, 93) :
@@ -717,11 +715,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       name: 'secondary',
       palette: (s) => s.secondaryPalette,
       tone: (s) => {
-        if (s.platform === 'watch') {
-          return s.variant === Variant.NEUTRAL ?
-              90 :
-              tMaxC(s.secondaryPalette, 0, 90);
-        } else if (s.variant === Variant.NEUTRAL) {
+        if (s.variant === Variant.NEUTRAL) {
           return s.isDark ? tMinC(s.secondaryPalette, 0, 98) :
                             tMaxC(s.secondaryPalette);
         } else if (s.variant === Variant.VIBRANT) {
@@ -779,9 +773,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       name: 'secondary_container',
       palette: (s) => s.secondaryPalette,
       tone: (s) => {
-        if (s.platform === 'watch') {
-          return 30;
-        } else if (s.variant === Variant.VIBRANT) {
+        if (s.variant === Variant.VIBRANT) {
           return s.isDark ? tMinC(s.secondaryPalette, 30, 40) :
                             tMaxC(s.secondaryPalette, 84, 90);
         } else if (s.variant === Variant.EXPRESSIVE) {
@@ -793,11 +785,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       isBackground: true,
       background: (s) =>
           s.platform === 'phone' ? this.highestSurface(s) : undefined,
-      toneDeltaPair: (s) => s.platform === 'watch' ?
-          new ToneDeltaPair(
-              this.secondaryContainer(), this.secondaryDim(), 10, 'darker',
-              true, 'farther') :
-          undefined,
+      toneDeltaPair: (s) => undefined,
       contrastCurve: (s) => s.platform === 'phone' && s.contrastLevel > 0 ?
           getCurve(1.5) :
           undefined,
@@ -876,11 +864,7 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       name: 'tertiary',
       palette: (s) => s.tertiaryPalette,
       tone: (s) => {
-        if (s.platform === 'watch') {
-          return s.variant === Variant.TONAL_SPOT ?
-              tMaxC(s.tertiaryPalette, 0, 90) :
-              tMaxC(s.tertiaryPalette);
-        } else if (
+        if (
             s.variant === Variant.EXPRESSIVE || s.variant === Variant.VIBRANT) {
           return tMaxC(
               s.tertiaryPalette, 0,
@@ -939,34 +923,24 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       name: 'tertiary_container',
       palette: (s) => s.tertiaryPalette,
       tone: (s) => {
-        if (s.platform === 'watch') {
-          return s.variant === Variant.TONAL_SPOT ?
-              tMaxC(s.tertiaryPalette, 0, 90) :
-              tMaxC(s.tertiaryPalette);
-        } else {
-          if (s.variant === Variant.NEUTRAL) {
-            return s.isDark ? tMaxC(s.tertiaryPalette, 0, 93) :
-                              tMaxC(s.tertiaryPalette, 0, 96);
-          } else if (s.variant === Variant.TONAL_SPOT) {
-            return tMaxC(s.tertiaryPalette, 0, s.isDark ? 93 : 100);
-          } else if (s.variant === Variant.EXPRESSIVE) {
-            return tMaxC(
-                s.tertiaryPalette, 75,
-                Hct.isCyan(s.tertiaryPalette.hue) ? 88 : (s.isDark ? 93 : 100));
-          } else {  // VIBRANT
-            return s.isDark ? tMaxC(s.tertiaryPalette, 0, 93) :
-                              tMaxC(s.tertiaryPalette, 72, 100);
-          }
+        if (s.variant === Variant.NEUTRAL) {
+          return s.isDark ? tMaxC(s.tertiaryPalette, 0, 93) :
+                            tMaxC(s.tertiaryPalette, 0, 96);
+        } else if (s.variant === Variant.TONAL_SPOT) {
+          return tMaxC(s.tertiaryPalette, 0, s.isDark ? 93 : 100);
+        } else if (s.variant === Variant.EXPRESSIVE) {
+          return tMaxC(
+              s.tertiaryPalette, 75,
+              Hct.isCyan(s.tertiaryPalette.hue) ? 88 : (s.isDark ? 93 : 100));
+        } else {  // VIBRANT
+          return s.isDark ? tMaxC(s.tertiaryPalette, 0, 93) :
+                            tMaxC(s.tertiaryPalette, 72, 100);
         }
       },
       isBackground: true,
       background: (s) =>
           s.platform === 'phone' ? this.highestSurface(s) : undefined,
-      toneDeltaPair: (s) => s.platform === 'watch' ?
-          new ToneDeltaPair(
-              this.tertiaryContainer(), this.tertiaryDim(), 10, 'darker', true,
-              'farther') :
-          undefined,
+      toneDeltaPair: (s) => undefined,
       contrastCurve: (s) => s.platform === 'phone' && s.contrastLevel > 0 ?
           getCurve(1.5) :
           undefined,
@@ -1094,21 +1068,13 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
       name: 'error_container',
       palette: (s) => s.errorPalette,
       tone: (s) => {
-        if (s.platform === 'watch') {
-          return 30;
-        } else {
-          return s.isDark ? tMinC(s.errorPalette, 30, 93) :
-                            tMaxC(s.errorPalette, 0, 90);
-        }
+        return s.isDark ? tMinC(s.errorPalette, 30, 93) :
+            tMaxC(s.errorPalette, 0, 90);
       },
       isBackground: true,
       background: (s) =>
           s.platform === 'phone' ? this.highestSurface(s) : undefined,
-      toneDeltaPair: (s) => s.platform === 'watch' ?
-          new ToneDeltaPair(
-              this.errorContainer(), this.errorDim(), 10, 'darker', true,
-              'farther') :
-          undefined,
+      toneDeltaPair: (s) => undefined,
       contrastCurve: (s) => s.platform === 'phone' && s.contrastLevel > 0 ?
           getCurve(1.5) :
           undefined,
