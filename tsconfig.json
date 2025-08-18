@@ -21,10 +21,7 @@
     "inlineSources": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "es2020",
-    "types": [
-      "jasmine"
-    ]
+    "target": "es2020"
   },
   "include": [
     "**/*.ts"
