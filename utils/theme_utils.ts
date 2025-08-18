@@ -20,7 +20,6 @@ import {CorePalette} from '../palettes/core_palette.js';
 import {TonalPalette} from '../palettes/tonal_palette.js';
 import {Scheme} from '../scheme/scheme.js';
 
-import {sourceColorFromImage} from './image_utils.js';
 import {hexFromArgb} from './string_utils.js';
 
 /**
@@ -93,19 +92,6 @@ export function themeFromSourceColor(
     },
     customColors: customColors.map((c) => customColor(source, c)),
   };
-}
-
-/**
- * Generate a theme from an image source
- *
- * @param image Image element
- * @param customColors Array of custom colors
- * @return Theme object
- */
-export async function themeFromImage(
-    image: HTMLImageElement, customColors: CustomColor[] = []) {
-  const source = await sourceColorFromImage(image);
-  return themeFromSourceColor(source, customColors);
 }
 
 /**
