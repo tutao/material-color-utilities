@@ -27,12 +27,6 @@ import {MaterialDynamicColors} from './material_dynamic_colors.js';
 import {Variant} from './variant.js';
 
 /**
- * The platform on which this scheme is intended to be used. Only used in the
- * 2025 spec.
- */
-export type Platform = 'phone';
-
-/**
  * @param sourceColorArgb The source color of the theme as an ARGB 32-bit
  *     integer.
  * @param variant The variant, or style, of the theme.
@@ -65,7 +59,6 @@ interface DynamicSchemeOptions {
   variant: Variant;
   contrastLevel: number;
   isDark: boolean;
-  platform?: Platform;
   specVersion?: SpecVersion;
   primaryPalette?: TonalPalette;
   secondaryPalette?: TonalPalette;
@@ -84,27 +77,27 @@ interface DynamicSchemeOptions {
 interface DynamicSchemePalettesDelegate {
   getPrimaryPalette:
       (variant: Variant, sourceColorHct: Hct, isDark: boolean,
-       platform: Platform, contrastLevel: number) => TonalPalette;
+       contrastLevel: number) => TonalPalette;
 
   getSecondaryPalette:
       (variant: Variant, sourceColorHct: Hct, isDark: boolean,
-       platform: Platform, contrastLevel: number) => TonalPalette;
+       contrastLevel: number) => TonalPalette;
 
   getTertiaryPalette:
       (variant: Variant, sourceColorHct: Hct, isDark: boolean,
-       platform: Platform, contrastLevel: number) => TonalPalette;
+       contrastLevel: number) => TonalPalette;
 
   getNeutralPalette:
       (variant: Variant, sourceColorHct: Hct, isDark: boolean,
-       platform: Platform, contrastLevel: number) => TonalPalette;
+       contrastLevel: number) => TonalPalette;
 
   getNeutralVariantPalette:
       (variant: Variant, sourceColorHct: Hct, isDark: boolean,
-       platform: Platform, contrastLevel: number) => TonalPalette;
+       contrastLevel: number) => TonalPalette;
 
   getErrorPalette:
       (variant: Variant, sourceColorHct: Hct, isDark: boolean,
-       platform: Platform, contrastLevel: number) => TonalPalette | undefined;
+       contrastLevel: number) => TonalPalette | undefined;
 }
 
 /**
@@ -115,7 +108,6 @@ interface DynamicSchemePalettesDelegate {
  */
 export class DynamicScheme {
   static readonly DEFAULT_SPEC_VERSION = '2021';
-  static readonly DEFAULT_PLATFORM = 'phone';
 
   /**
    * The source color of the theme as an HCT color.
@@ -136,9 +128,6 @@ export class DynamicScheme {
 
   /** Whether the scheme is in dark mode or light mode. */
   readonly isDark: boolean;
-
-  /** The platform on which this scheme is intended to be used. */
-  readonly platform: Platform;
 
   /** The version of the design spec that this scheme is based on. */
   readonly specVersion: SpecVersion;
@@ -191,39 +180,32 @@ export class DynamicScheme {
     this.variant = args.variant;
     this.contrastLevel = args.contrastLevel;
     this.isDark = args.isDark;
-    this.platform = args.platform ?? 'phone';
     this.specVersion = args.specVersion ?? '2021';
     this.sourceColorHct = args.sourceColorHct;
     this.primaryPalette = args.primaryPalette ??
         getSpec(this.specVersion)
             .getPrimaryPalette(
-                this.variant, args.sourceColorHct, this.isDark, this.platform,
-                this.contrastLevel);
+                this.variant, args.sourceColorHct, this.isDark, this.contrastLevel);
     this.secondaryPalette = args.secondaryPalette ??
         getSpec(this.specVersion)
             .getSecondaryPalette(
-                this.variant, args.sourceColorHct, this.isDark, this.platform,
-                this.contrastLevel);
+                this.variant, args.sourceColorHct, this.isDark, this.contrastLevel);
     this.tertiaryPalette = args.tertiaryPalette ??
         getSpec(this.specVersion)
             .getTertiaryPalette(
-                this.variant, args.sourceColorHct, this.isDark, this.platform,
-                this.contrastLevel);
+                this.variant, args.sourceColorHct, this.isDark, this.contrastLevel);
     this.neutralPalette = args.neutralPalette ??
         getSpec(this.specVersion)
             .getNeutralPalette(
-                this.variant, args.sourceColorHct, this.isDark, this.platform,
-                this.contrastLevel);
+                this.variant, args.sourceColorHct, this.isDark, this.contrastLevel);
     this.neutralVariantPalette = args.neutralVariantPalette ??
         getSpec(this.specVersion)
             .getNeutralVariantPalette(
-                this.variant, args.sourceColorHct, this.isDark, this.platform,
-                this.contrastLevel);
+                this.variant, args.sourceColorHct, this.isDark, this.contrastLevel);
     this.errorPalette = args.errorPalette ??
         getSpec(this.specVersion)
             .getErrorPalette(
-                this.variant, args.sourceColorHct, this.isDark, this.platform,
-                this.contrastLevel) ??
+                this.variant, args.sourceColorHct, this.isDark, this.contrastLevel) ??
         TonalPalette.fromHueAndChroma(25.0, 84.0);
 
     this.colors = new MaterialDynamicColors();
@@ -233,7 +215,6 @@ export class DynamicScheme {
     return `Scheme: ` +
         `variant=${Variant[this.variant]}, ` +
         `mode=${this.isDark ? 'dark' : 'light'}, ` +
-        `platform=${this.platform}, ` +
         `contrastLevel=${this.contrastLevel.toFixed(1)}, ` +
         `seed=${this.sourceColorHct.toString()}, ` +
         `specVersion=${this.specVersion}`
@@ -590,7 +571,7 @@ class DynamicSchemePalettesDelegateImpl2021 implements
 
   getPrimaryPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.CONTENT:
       case Variant.FIDELITY:
@@ -619,7 +600,7 @@ class DynamicSchemePalettesDelegateImpl2021 implements
 
   getSecondaryPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.CONTENT:
       case Variant.FIDELITY:
@@ -657,7 +638,7 @@ class DynamicSchemePalettesDelegateImpl2021 implements
 
   getTertiaryPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.CONTENT:
         return TonalPalette.fromHct(DislikeAnalyzer.fixIfDisliked(
@@ -695,7 +676,7 @@ class DynamicSchemePalettesDelegateImpl2021 implements
 
   getNeutralPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.CONTENT:
       case Variant.FIDELITY:
@@ -723,7 +704,7 @@ class DynamicSchemePalettesDelegateImpl2021 implements
 
   getNeutralVariantPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.CONTENT:
         return TonalPalette.fromHueAndChroma(
@@ -753,7 +734,7 @@ class DynamicSchemePalettesDelegateImpl2021 implements
 
   getErrorPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette|undefined {
+      contrastLevel: number): TonalPalette|undefined {
     return undefined;
   }
 }
@@ -769,37 +750,35 @@ class DynamicSchemePalettesDelegateImpl2025 extends
 
   override getPrimaryPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.NEUTRAL:
         return TonalPalette.fromHueAndChroma(
             sourceColorHct.hue,
-            platform === 'phone' ? (Hct.isBlue(sourceColorHct.hue) ? 12 : 8) :
-                                   (Hct.isBlue(sourceColorHct.hue) ? 16 : 12));
+            (Hct.isBlue(sourceColorHct.hue) ? 12 : 8));
       case Variant.TONAL_SPOT:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, platform === 'phone' && isDark ? 26 : 32);
+            sourceColorHct.hue, isDark ? 26 : 32);
       case Variant.EXPRESSIVE:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, platform === 'phone' ? (isDark ? 36 : 48) : 40);
+            sourceColorHct.hue, (isDark ? 36 : 48));
       case Variant.VIBRANT:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, platform === 'phone' ? 74 : 56);
+            sourceColorHct.hue, 74);
       default:
         return super.getPrimaryPalette(
-            variant, sourceColorHct, isDark, platform, contrastLevel);
+            variant, sourceColorHct, isDark, contrastLevel);
     }
   }
 
   override getSecondaryPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.NEUTRAL:
         return TonalPalette.fromHueAndChroma(
             sourceColorHct.hue,
-            platform === 'phone' ? (Hct.isBlue(sourceColorHct.hue) ? 6 : 4) :
-                                   (Hct.isBlue(sourceColorHct.hue) ? 10 : 6));
+            (Hct.isBlue(sourceColorHct.hue) ? 6 : 4));
       case Variant.TONAL_SPOT:
         return TonalPalette.fromHueAndChroma(sourceColorHct.hue, 16);
       case Variant.EXPRESSIVE:
@@ -807,35 +786,35 @@ class DynamicSchemePalettesDelegateImpl2025 extends
             DynamicScheme.getRotatedHue(
                 sourceColorHct, [0, 105, 140, 204, 253, 278, 300, 333, 360],
                 [-160, 155, -100, 96, -96, -156, -165, -160]),
-            platform === 'phone' ? (isDark ? 16 : 24) : 24);
+            (isDark ? 16 : 24));
       case Variant.VIBRANT:
         return TonalPalette.fromHueAndChroma(
             DynamicScheme.getRotatedHue(
                 sourceColorHct, [0, 38, 105, 140, 333, 360],
                 [-14, 10, -14, 10, -14]),
-            platform === 'phone' ? 56 : 36);
+            56);
       default:
         return super.getSecondaryPalette(
-            variant, sourceColorHct, isDark, platform, contrastLevel);
+            variant, sourceColorHct, isDark, contrastLevel);
     }
   }
 
   override getTertiaryPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.NEUTRAL:
         return TonalPalette.fromHueAndChroma(
             DynamicScheme.getRotatedHue(
                 sourceColorHct, [0, 38, 105, 161, 204, 278, 333, 360],
                 [-32, 26, 10, -39, 24, -15, -32]),
-            platform === 'phone' ? 20 : 36);
+            20);
       case Variant.TONAL_SPOT:
         return TonalPalette.fromHueAndChroma(
             DynamicScheme.getRotatedHue(
                 sourceColorHct, [0, 20, 71, 161, 333, 360],
                 [-40, 48, -32, 40, -32]),
-            platform === 'phone' ? 28 : 32);
+            28);
       case Variant.EXPRESSIVE:
         return TonalPalette.fromHueAndChroma(
             DynamicScheme.getRotatedHue(
@@ -850,7 +829,7 @@ class DynamicSchemePalettesDelegateImpl2025 extends
             56);
       default:
         return super.getTertiaryPalette(
-            variant, sourceColorHct, isDark, platform, contrastLevel);
+            variant, sourceColorHct, isDark, contrastLevel);
     }
   }
 
@@ -862,13 +841,11 @@ class DynamicSchemePalettesDelegateImpl2025 extends
   }
 
   private static getExpressiveNeutralChroma(
-      sourceColorHct: Hct, isDark: boolean, platform: Platform): number {
+      sourceColorHct: Hct, isDark: boolean): number {
     const neutralHue =
         DynamicSchemePalettesDelegateImpl2025.getExpressiveNeutralHue(
             sourceColorHct);
-    return platform === 'phone' ?
-        (isDark ? (Hct.isYellow(neutralHue) ? 6 : 14) : 18) :
-        12;
+    return (isDark ? (Hct.isYellow(neutralHue) ? 6 : 14) : 18);
   }
 
   private static getVibrantNeutralHue(sourceColorHct: Hct): number {
@@ -877,58 +854,55 @@ class DynamicSchemePalettesDelegateImpl2025 extends
   }
 
   private static getVibrantNeutralChroma(
-      sourceColorHct: Hct, platform: Platform): number {
-    const neutralHue =
-        DynamicSchemePalettesDelegateImpl2025.getVibrantNeutralHue(
-            sourceColorHct);
-    return platform === 'phone' ? 28 : (Hct.isBlue(neutralHue) ? 28 : 20);
+      sourceColorHct: Hct): number {
+    return 28;
   }
 
   override getNeutralPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.NEUTRAL:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, platform === 'phone' ? 1.4 : 6);
+            sourceColorHct.hue, 1.4);
       case Variant.TONAL_SPOT:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, platform === 'phone' ? 5 : 10);
+            sourceColorHct.hue, 5);
       case Variant.EXPRESSIVE:
         return TonalPalette.fromHueAndChroma(
             DynamicSchemePalettesDelegateImpl2025.getExpressiveNeutralHue(
                 sourceColorHct),
             DynamicSchemePalettesDelegateImpl2025.getExpressiveNeutralChroma(
-                sourceColorHct, isDark, platform));
+                sourceColorHct, isDark));
       case Variant.VIBRANT:
         return TonalPalette.fromHueAndChroma(
             DynamicSchemePalettesDelegateImpl2025.getVibrantNeutralHue(
                 sourceColorHct),
             DynamicSchemePalettesDelegateImpl2025.getVibrantNeutralChroma(
-                sourceColorHct, platform));
+                sourceColorHct));
       default:
         return super.getNeutralPalette(
-            variant, sourceColorHct, isDark, platform, contrastLevel);
+            variant, sourceColorHct, isDark, contrastLevel);
     }
   }
 
   override getNeutralVariantPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette {
+      contrastLevel: number): TonalPalette {
     switch (variant) {
       case Variant.NEUTRAL:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, (platform === 'phone' ? 1.4 : 6) * 2.2);
+            sourceColorHct.hue, 1.4 * 2.2);
       case Variant.TONAL_SPOT:
         return TonalPalette.fromHueAndChroma(
-            sourceColorHct.hue, (platform === 'phone' ? 5 : 10) * 1.7);
+            sourceColorHct.hue, 5 * 1.7);
       case Variant.EXPRESSIVE:
         const expressiveNeutralHue =
             DynamicSchemePalettesDelegateImpl2025.getExpressiveNeutralHue(
                 sourceColorHct);
         const expressiveNeutralChroma =
             DynamicSchemePalettesDelegateImpl2025.getExpressiveNeutralChroma(
-                sourceColorHct, isDark, platform);
+                sourceColorHct, isDark);
         return TonalPalette.fromHueAndChroma(
             expressiveNeutralHue,
             expressiveNeutralChroma *
@@ -942,37 +916,37 @@ class DynamicSchemePalettesDelegateImpl2025 extends
                 sourceColorHct);
         const vibrantNeutralChroma =
             DynamicSchemePalettesDelegateImpl2025.getVibrantNeutralChroma(
-                sourceColorHct, platform);
+                sourceColorHct);
         return TonalPalette.fromHueAndChroma(
             vibrantNeutralHue, vibrantNeutralChroma * 1.29);
       default:
         return super.getNeutralVariantPalette(
-            variant, sourceColorHct, isDark, platform, contrastLevel);
+            variant, sourceColorHct, isDark, contrastLevel);
     }
   }
 
   override getErrorPalette(
       variant: Variant, sourceColorHct: Hct, isDark: boolean,
-      platform: Platform, contrastLevel: number): TonalPalette|undefined {
+      contrastLevel: number): TonalPalette|undefined {
     const errorHue = DynamicScheme.getPiecewiseHue(
         sourceColorHct, [0, 3, 13, 23, 33, 43, 153, 273, 360],
         [12, 22, 32, 12, 22, 32, 22, 12]);
     switch (variant) {
       case Variant.NEUTRAL:
         return TonalPalette.fromHueAndChroma(
-            errorHue, platform === 'phone' ? 50 : 40);
+            errorHue, 50);
       case Variant.TONAL_SPOT:
         return TonalPalette.fromHueAndChroma(
-            errorHue, platform === 'phone' ? 60 : 48);
+            errorHue, 60);
       case Variant.EXPRESSIVE:
         return TonalPalette.fromHueAndChroma(
-            errorHue, platform === 'phone' ? 64 : 48);
+            errorHue, 64);
       case Variant.VIBRANT:
         return TonalPalette.fromHueAndChroma(
-            errorHue, platform === 'phone' ? 80 : 60);
+            errorHue, 80);
       default:
         return super.getErrorPalette(
-            variant, sourceColorHct, isDark, platform, contrastLevel);
+            variant, sourceColorHct, isDark, contrastLevel);
     }
   }
 }

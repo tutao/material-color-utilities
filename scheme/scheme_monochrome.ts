@@ -16,7 +16,7 @@
  */
 
 import {SpecVersion} from '../dynamiccolor/color_spec.js';
-import {DynamicScheme, Platform} from '../dynamiccolor/dynamic_scheme';
+import {DynamicScheme} from '../dynamiccolor/dynamic_scheme';
 import {Variant} from '../dynamiccolor/variant.js';
 import {Hct} from '../hct/hct.js';
 
@@ -24,14 +24,12 @@ import {Hct} from '../hct/hct.js';
 export class SchemeMonochrome extends DynamicScheme {
   constructor(
       sourceColorHct: Hct, isDark: boolean, contrastLevel: number,
-      specVersion: SpecVersion = DynamicScheme.DEFAULT_SPEC_VERSION,
-      platform: Platform = DynamicScheme.DEFAULT_PLATFORM) {
+      specVersion: SpecVersion = DynamicScheme.DEFAULT_SPEC_VERSION) {
     super({
       sourceColorHct,
       variant: Variant.MONOCHROME,
       contrastLevel,
       isDark,
-      platform,
       specVersion,
     });
   }
