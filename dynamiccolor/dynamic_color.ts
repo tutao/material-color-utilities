@@ -523,7 +523,7 @@ class ColorCalculationDelegateImpl2025 implements ColorCalculationDelegate {
       const darkOption = Contrast.darker(lower, desiredRatio);
 
       // Tones suitable for the foreground.
-      const availables = [];
+      const availables: number[] = [];
       if (lightOption !== -1) availables.push(lightOption);
       if (darkOption !== -1) availables.push(darkOption);
 
