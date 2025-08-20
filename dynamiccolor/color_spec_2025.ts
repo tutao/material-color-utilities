@@ -18,11 +18,11 @@
 import {Hct} from '../hct/hct.js';
 import {TonalPalette} from '../palettes/tonal_palette.js';
 import * as math from '../utils/math_utils.js';
-
-import {ColorSpecDelegateImpl2021} from './color_spec_2021.js';
 import {ContrastCurve} from './contrast_curve.js';
-import {DynamicColor, extendSpecVersion} from './dynamic_color';
+import {DynamicColor} from './dynamic_color';
 import {ToneDeltaPair} from './tone_delta_pair.js';
+import type {DynamicScheme} from "./dynamic_scheme";
+import {ColorSpecDelegate} from "./color_spec";
 
 /**
  * Returns the maximum tone for a given chroma in the palette.
@@ -113,17 +113,68 @@ function getCurve(defaultContrast: number): ContrastCurve {
 /**
  * A delegate for the dynamic color spec of a DynamicScheme in the 2025 spec.
  */
-export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
+export class ColorSpecDelegateImpl2025 implements ColorSpecDelegate {
+    ////////////////////////////////////////////////////////////////
+    // Main Palettes                                              //
+    ////////////////////////////////////////////////////////////////
+
+    primaryPaletteKeyColor(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'primary_palette_key_color',
+            palette: (s) => s.primaryPalette,
+            tone: (s) => s.primaryPalette.keyColor.tone,
+        });
+    }
+
+    secondaryPaletteKeyColor(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'secondary_palette_key_color',
+            palette: (s) => s.secondaryPalette,
+            tone: (s) => s.secondaryPalette.keyColor.tone,
+        });
+    }
+
+    tertiaryPaletteKeyColor(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'tertiary_palette_key_color',
+            palette: (s) => s.tertiaryPalette,
+            tone: (s) => s.tertiaryPalette.keyColor.tone,
+        });
+    }
+
+    neutralPaletteKeyColor(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'neutral_palette_key_color',
+            palette: (s) => s.neutralPalette,
+            tone: (s) => s.neutralPalette.keyColor.tone,
+        });
+    }
+
+    neutralVariantPaletteKeyColor(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'neutral_variant_palette_key_color',
+            palette: (s) => s.neutralVariantPalette,
+            tone: (s) => s.neutralVariantPalette.keyColor.tone,
+        });
+    }
+
+    errorPaletteKeyColor(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'error_palette_key_color',
+            palette: (s) => s.errorPalette,
+            tone: (s) => s.errorPalette.keyColor.tone,
+        });
+    }
+
     ////////////////////////////////////////////////////////////////
     // Surfaces [S]                                               //
     ////////////////////////////////////////////////////////////////
 
-    override surface(): DynamicColor {
+    surface(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface',
             palette: (s) => s.neutralPalette,
             tone: (s) => {
-                super.surface().tone(s);
                 if (s.isDark) {
                     return 4;
                 } else {
@@ -136,10 +187,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             },
             isBackground: true,
         });
-        return extendSpecVersion(super.surface(), color2025);
+        return color2025
     }
 
-    override surfaceDim(): DynamicColor {
+    surfaceDim(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_dim',
             palette: (s) => s.neutralPalette,
@@ -162,10 +213,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1;
             },
         });
-        return extendSpecVersion(super.surfaceDim(), color2025);
+        return color2025;
     }
 
-    override surfaceBright(): DynamicColor {
+    surfaceBright(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_bright',
             palette: (s) => s.neutralPalette,
@@ -188,20 +239,20 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1;
             },
         });
-        return extendSpecVersion(super.surfaceBright(), color2025);
+        return color2025
     }
 
-    override surfaceContainerLowest(): DynamicColor {
+    surfaceContainerLowest(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_container_lowest',
             palette: (s) => s.neutralPalette,
             tone: (s) => s.isDark ? 0 : 100,
             isBackground: true,
         });
-        return extendSpecVersion(super.surfaceContainerLowest(), color2025);
+        return color2025;
     }
 
-    override surfaceContainerLow(): DynamicColor {
+    surfaceContainerLow(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_container_low',
             palette: (s) => s.neutralPalette,
@@ -221,10 +272,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1.3;
             },
         });
-        return extendSpecVersion(super.surfaceContainerLow(), color2025);
+        return color2025;
     }
 
-    override surfaceContainer(): DynamicColor {
+    surfaceContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_container',
             palette: (s) => s.neutralPalette,
@@ -244,10 +295,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1.6;
             },
         });
-        return extendSpecVersion(super.surfaceContainer(), color2025);
+        return color2025;
     }
 
-    override surfaceContainerHigh(): DynamicColor {
+    surfaceContainerHigh(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_container_high',
             palette: (s) => s.neutralPalette,
@@ -267,10 +318,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 1.9;
             },
         });
-        return extendSpecVersion(super.surfaceContainerHigh(), color2025);
+        return color2025;
     }
 
-    override surfaceContainerHighest(): DynamicColor {
+    surfaceContainerHighest(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'surface_container_highest',
             palette: (s) => s.neutralPalette,
@@ -290,11 +341,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 return 2.2;
             },
         });
-        return extendSpecVersion(
-            super.surfaceContainerHighest(), color2025);
+        return color2025;
     }
 
-    override onSurface(): DynamicColor {
+    onSurface(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_surface',
             palette: (s) => s.neutralPalette,
@@ -308,10 +358,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => s.isDark ? getCurve(11) : getCurve(9),
         });
-        return extendSpecVersion(super.onSurface(), color2025);
+        return color2025;
     }
 
-    override onSurfaceVariant(): DynamicColor {
+    onSurfaceVariant(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_surface_variant',
             palette: (s) => s.neutralPalette,
@@ -321,10 +371,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => (s.isDark ? getCurve(6) : getCurve(4.5))
         });
-        return extendSpecVersion(super.onSurfaceVariant(), color2025);
+        return color2025;
     }
 
-    override outline(): DynamicColor {
+    outline(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'outline',
             palette: (s) => s.neutralPalette,
@@ -334,10 +384,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => getCurve(3),
         });
-        return extendSpecVersion(super.outline(), color2025);
+        return color2025;
     }
 
-    override outlineVariant(): DynamicColor {
+    outlineVariant(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'outline_variant',
             palette: (s) => s.neutralPalette,
@@ -347,34 +397,50 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.highestSurface(s),
             contrastCurve: (s) => getCurve(1.5),
         });
-        return extendSpecVersion(super.outlineVariant(), color2025);
+        return color2025;
     }
 
-    override inverseSurface(): DynamicColor {
+    inverseSurface(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'inverse_surface',
             palette: (s) => s.neutralPalette,
             tone: (s) => s.isDark ? 98 : 4,
             isBackground: true,
         });
-        return extendSpecVersion(super.inverseSurface(), color2025);
+        return color2025;
     }
 
-    override inverseOnSurface(): DynamicColor {
+    inverseOnSurface(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'inverse_on_surface',
             palette: (s) => s.neutralPalette,
             background: (s) => this.inverseSurface(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.inverseOnSurface(), color2025);
+        return color2025;
+    }
+
+    shadow(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'shadow',
+            palette: (s) => s.neutralPalette,
+            tone: (s) => 0,
+        });
+    }
+
+    scrim(): DynamicColor {
+        return DynamicColor.fromPalette({
+            name: 'scrim',
+            palette: (s) => s.neutralPalette,
+            tone: (s) => 0,
+        });
     }
 
     ////////////////////////////////////////////////////////////////
     // Primaries [P]                                              //
     ////////////////////////////////////////////////////////////////
 
-    override primary(): DynamicColor {
+    primary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'primary',
             palette: (s) => s.primaryPalette,
@@ -388,10 +454,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.primaryContainer(), this.primary(), 5, 'relative_lighter',
                 true, 'farther'),
         });
-        return extendSpecVersion(super.primary(), color2025);
+        return color2025;
     }
 
-    override primaryDim(): DynamicColor {
+    primaryDim(): DynamicColor {
         return DynamicColor.fromPalette({
             name: 'primary_dim',
             palette: (s) => s.primaryPalette,
@@ -406,17 +472,17 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
         });
     }
 
-    override onPrimary(): DynamicColor {
+    onPrimary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_primary',
             palette: (s) => s.primaryPalette,
             background: (s) => this.primary(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onPrimary(), color2025);
+        return color2025;
     }
 
-    override primaryContainer(): DynamicColor {
+    primaryContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'primary_container',
             palette: (s) => s.primaryPalette,
@@ -430,20 +496,20 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.primaryContainer(), color2025);
+        return color2025;
     }
 
-    override onPrimaryContainer(): DynamicColor {
+    onPrimaryContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_primary_container',
             palette: (s) => s.primaryPalette,
             background: (s) => this.primaryContainer(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onPrimaryContainer(), color2025);
+        return color2025;
     }
 
-    override primaryFixed(): DynamicColor {
+    primaryFixed(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'primary_fixed',
             palette: (s) => s.primaryPalette,
@@ -457,10 +523,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.primaryFixed(), color2025);
+        return color2025;
     }
 
-    override primaryFixedDim(): DynamicColor {
+    primaryFixedDim(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'primary_fixed_dim',
             palette: (s) => s.primaryPalette,
@@ -470,30 +536,30 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.primaryFixedDim(), this.primaryFixed(), 5, 'darker', true,
                 'exact'),
         });
-        return extendSpecVersion(super.primaryFixedDim(), color2025);
+        return color2025;
     }
 
-    override onPrimaryFixed(): DynamicColor {
+    onPrimaryFixed(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_primary_fixed',
             palette: (s) => s.primaryPalette,
             background: (s) => this.primaryFixedDim(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.onPrimaryFixed(), color2025);
+        return color2025;
     }
 
-    override onPrimaryFixedVariant(): DynamicColor {
+    onPrimaryFixedVariant(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_primary_fixed_variant',
             palette: (s) => s.primaryPalette,
             background: (s) => this.primaryFixedDim(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(super.onPrimaryFixedVariant(), color2025);
+        return color2025;
     }
 
-    override inversePrimary(): DynamicColor {
+    inversePrimary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'inverse_primary',
             palette: (s) => s.primaryPalette,
@@ -501,14 +567,14 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
             background: (s) => this.inverseSurface(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.inversePrimary(), color2025);
+        return color2025;
     }
 
     ////////////////////////////////////////////////////////////////
     // Secondaries [Q]                                            //
     ////////////////////////////////////////////////////////////////
 
-    override secondary(): DynamicColor {
+    secondary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'secondary',
             palette: (s) => s.secondaryPalette,
@@ -523,10 +589,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.secondaryContainer(), this.secondary(), 5,
                 'relative_lighter', true, 'farther')
         });
-        return extendSpecVersion(super.secondary(), color2025);
+        return color2025;
     }
 
-    override secondaryDim(): DynamicColor {
+    secondaryDim(): DynamicColor {
         return DynamicColor.fromPalette({
             name: 'secondary_dim',
             palette: (s) => s.secondaryPalette,
@@ -541,17 +607,17 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
         });
     }
 
-    override onSecondary(): DynamicColor {
+    onSecondary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_secondary',
             palette: (s) => s.secondaryPalette,
             background: (s) => this.secondary(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onSecondary(), color2025);
+        return color2025;
     }
 
-    override secondaryContainer(): DynamicColor {
+    secondaryContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'secondary_container',
             palette: (s) => s.secondaryPalette,
@@ -565,20 +631,20 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.secondaryContainer(), color2025);
+        return color2025;
     }
 
-    override onSecondaryContainer(): DynamicColor {
+    onSecondaryContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_secondary_container',
             palette: (s) => s.secondaryPalette,
             background: (s) => this.secondaryContainer(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onSecondaryContainer(), color2025);
+        return color2025;
     }
 
-    override secondaryFixed(): DynamicColor {
+    secondaryFixed(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'secondary_fixed',
             palette: (s) => s.secondaryPalette,
@@ -592,10 +658,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.secondaryFixed(), color2025);
+        return color2025;
     }
 
-    override secondaryFixedDim(): DynamicColor {
+    secondaryFixedDim(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'secondary_fixed_dim',
             palette: (s) => s.secondaryPalette,
@@ -605,35 +671,34 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.secondaryFixedDim(), this.secondaryFixed(), 5, 'darker', true,
                 'exact'),
         });
-        return extendSpecVersion(super.secondaryFixedDim(), color2025);
+        return color2025;
     }
 
-    override onSecondaryFixed(): DynamicColor {
+    onSecondaryFixed(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_secondary_fixed',
             palette: (s) => s.secondaryPalette,
             background: (s) => this.secondaryFixedDim(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.onSecondaryFixed(), color2025);
+        return color2025;
     }
 
-    override onSecondaryFixedVariant(): DynamicColor {
+    onSecondaryFixedVariant(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_secondary_fixed_variant',
             palette: (s) => s.secondaryPalette,
             background: (s) => this.secondaryFixedDim(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(
-            super.onSecondaryFixedVariant(), color2025);
+        return color2025;
     }
 
     ////////////////////////////////////////////////////////////////
     // Tertiaries [T]                                             //
     ////////////////////////////////////////////////////////////////
 
-    override tertiary(): DynamicColor {
+    tertiary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'tertiary',
             palette: (s) => s.tertiaryPalette,
@@ -650,10 +715,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                     this.tertiaryContainer(), this.tertiary(), 5, 'relative_lighter',
                     true, 'farther')
         });
-        return extendSpecVersion(super.tertiary(), color2025);
+        return color2025;
     }
 
-    override tertiaryDim(): DynamicColor {
+    tertiaryDim(): DynamicColor {
         return DynamicColor.fromPalette({
             name: 'tertiary_dim',
             palette: (s) => s.tertiaryPalette,
@@ -668,17 +733,17 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
         });
     }
 
-    override onTertiary(): DynamicColor {
+    onTertiary(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_tertiary',
             palette: (s) => s.tertiaryPalette,
             background: (s) => this.tertiary(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onTertiary(), color2025);
+        return color2025;
     }
 
-    override tertiaryContainer(): DynamicColor {
+    tertiaryContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'tertiary_container',
             palette: (s) => s.tertiaryPalette,
@@ -693,20 +758,20 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.tertiaryContainer(), color2025);
+        return color2025;
     }
 
-    override onTertiaryContainer(): DynamicColor {
+    onTertiaryContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_tertiary_container',
             palette: (s) => s.tertiaryPalette,
             background: (s) => this.tertiaryContainer(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onTertiaryContainer(), color2025);
+        return color2025;
     }
 
-    override tertiaryFixed(): DynamicColor {
+    tertiaryFixed(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'tertiary_fixed',
             palette: (s) => s.tertiaryPalette,
@@ -720,10 +785,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.tertiaryFixed(), color2025);
+        return color2025;
     }
 
-    override tertiaryFixedDim(): DynamicColor {
+    tertiaryFixedDim(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'tertiary_fixed_dim',
             palette: (s) => s.tertiaryPalette,
@@ -733,34 +798,34 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.tertiaryFixedDim(), this.tertiaryFixed(), 5, 'darker', true,
                 'exact'),
         });
-        return extendSpecVersion(super.tertiaryFixedDim(), color2025);
+        return color2025;
     }
 
-    override onTertiaryFixed(): DynamicColor {
+    onTertiaryFixed(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_tertiary_fixed',
             palette: (s) => s.tertiaryPalette,
             background: (s) => this.tertiaryFixedDim(),
             contrastCurve: (s) => getCurve(7),
         });
-        return extendSpecVersion(super.onTertiaryFixed(), color2025);
+        return color2025;
     }
 
-    override onTertiaryFixedVariant(): DynamicColor {
+    onTertiaryFixedVariant(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_tertiary_fixed_variant',
             palette: (s) => s.tertiaryPalette,
             background: (s) => this.tertiaryFixedDim(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(super.onTertiaryFixedVariant(), color2025);
+        return color2025;
     }
 
     ////////////////////////////////////////////////////////////////
     // Errors [E]                                                 //
     ////////////////////////////////////////////////////////////////
 
-    override error(): DynamicColor {
+    error(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'error',
             palette: (s) => s.errorPalette,
@@ -775,10 +840,10 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 this.errorContainer(), this.error(), 5, 'relative_lighter', true,
                 'farther')
         });
-        return extendSpecVersion(super.error(), color2025);
+        return color2025;
     }
 
-    override errorDim(): DynamicColor {
+    errorDim(): DynamicColor {
         return DynamicColor.fromPalette({
             name: 'error_dim',
             palette: (s) => s.errorPalette,
@@ -791,17 +856,17 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
         });
     }
 
-    override onError(): DynamicColor {
+    onError(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_error',
             palette: (s) => s.errorPalette,
             background: (s) => this.error(),
             contrastCurve: (s) => getCurve(6),
         });
-        return extendSpecVersion(super.onError(), color2025);
+        return color2025;
     }
 
-    override errorContainer(): DynamicColor {
+    errorContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'error_container',
             palette: (s) => s.errorPalette,
@@ -816,44 +881,53 @@ export class ColorSpecDelegateImpl2025 extends ColorSpecDelegateImpl2021 {
                 getCurve(1.5) :
                 undefined,
         });
-        return extendSpecVersion(super.errorContainer(), color2025);
+        return color2025;
     }
 
-    override onErrorContainer(): DynamicColor {
+    onErrorContainer(): DynamicColor {
         const color2025: DynamicColor = DynamicColor.fromPalette({
             name: 'on_error_container',
             palette: (s) => s.errorPalette,
             background: (s) => this.errorContainer(),
             contrastCurve: (s) => getCurve(4.5),
         });
-        return extendSpecVersion(super.onErrorContainer(), color2025);
+        return color2025;
     }
 
     /////////////////////////////////////////////////////////////////
     // Remapped Colors                                             //
     /////////////////////////////////////////////////////////////////
 
-    override surfaceVariant(): DynamicColor {
+    surfaceVariant(): DynamicColor {
         const color2025: DynamicColor = Object.assign(
             this.surfaceContainerHighest().clone(), {name: 'surface_variant'});
-        return extendSpecVersion(super.surfaceVariant(), color2025);
+        return color2025;
     }
 
-    override surfaceTint(): DynamicColor {
+    surfaceTint(): DynamicColor {
         const color2025: DynamicColor =
             Object.assign(this.primary().clone(), {name: 'surface_tint'});
-        return extendSpecVersion(super.surfaceTint(), color2025);
+        return color2025;
     }
 
-    override background(): DynamicColor {
+    background(): DynamicColor {
         const color2025: DynamicColor =
             Object.assign(this.surface().clone(), {name: 'background'});
-        return extendSpecVersion(super.background(), color2025);
+        return color2025;
     }
 
-    override onBackground(): DynamicColor {
+    onBackground(): DynamicColor {
         const color2025: DynamicColor =
             Object.assign(this.onSurface().clone(), {name: 'on_background'});
-        return extendSpecVersion(super.onBackground(), color2025);
+        return color2025;
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    // Other                                                      //
+    ////////////////////////////////////////////////////////////////
+
+    highestSurface(s: DynamicScheme): DynamicColor {
+        return s.isDark ? this.surfaceBright() : this.surfaceDim();
     }
 }

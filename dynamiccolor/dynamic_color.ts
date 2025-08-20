@@ -73,64 +73,6 @@ interface ColorCalculationDelegate {
   getTone(scheme: DynamicScheme, color: DynamicColor): number;
 }
 
-function validateExtendedColor(
-    originalColor: DynamicColor, extendedColor: DynamicColor) {
-  if (originalColor.name !== extendedColor.name) {
-    throw new Error(
-        `Attempting to extend color ${originalColor.name} with color ${
-            extendedColor.name} of different name.`);
-  }
-  if (originalColor.isBackground !== extendedColor.isBackground) {
-    throw new Error(`Attempting to extend color ${originalColor.name} as a ${
-        (originalColor.isBackground ?
-             'background' :
-             'foreground')} with color ${extendedColor.name} as a ${
-        (extendedColor.isBackground ?
-             'background' :
-             'foreground')}.`);
-  }
-}
-/**
- * Returns a new DynamicColor that is the same as the original color, but with
- * the extended dynamic color's constraints for the given spec version.
- *
- * @param originlColor The original color.
- * @param specVersion The spec version to extend.
- * @param extendedColor The color with the values to extend.
- */
-export function extendSpecVersion(
-    originlColor: DynamicColor,
-    extendedColor: DynamicColor): DynamicColor {
-  validateExtendedColor(originlColor, extendedColor);
-
-  return DynamicColor.fromPalette({
-    name: originlColor.name,
-    palette: (s) => extendedColor.palette(s),
-    tone: (s) => extendedColor.tone(s),
-    isBackground: originlColor.isBackground,
-    chromaMultiplier: (s) => {
-      const chromaMultiplier = extendedColor.chromaMultiplier;
-      return chromaMultiplier !== undefined ? chromaMultiplier(s) : 1;
-    },
-    background: (s) => {
-      const background = extendedColor.background
-      return background !== undefined ? background(s) : undefined
-    },
-    secondBackground: (s) => {
-      const secondBackground = extendedColor.secondBackground;
-      return secondBackground !== undefined ? secondBackground(s) : undefined;
-    },
-    contrastCurve: (s) => {
-      const contrastCurve = extendedColor.contrastCurve;
-      return contrastCurve !== undefined ? contrastCurve(s) : undefined;
-    },
-    toneDeltaPair: (s) => {
-      const toneDeltaPair = extendedColor.toneDeltaPair;
-      return toneDeltaPair !== undefined ? toneDeltaPair(s) : undefined;
-    },
-  });
-}
-
 /**
  * A color that adjusts itself based on UI state provided by DynamicScheme.
  *

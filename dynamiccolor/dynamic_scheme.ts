@@ -20,7 +20,8 @@ import {TonalPalette} from '../palettes/tonal_palette.js';
 import * as math from '../utils/math_utils.js';
 
 import {DynamicColor} from './dynamic_color.js';
-import {MaterialDynamicColors} from './material_dynamic_colors.js';
+import {ColorSpecDelegateImpl2025} from "./color_spec_2025";
+import {ColorSpecDelegate} from "./color_spec";
 
 /**
  * @param sourceColorArgb The source color of the theme as an ARGB 32-bit
@@ -101,8 +102,6 @@ interface DynamicSchemePalettesDelegate {
  * with the theme style. Used by DynamicColor to resolve into a color.
  */
 export class DynamicScheme {
-  static readonly DEFAULT_SPEC_VERSION = '2021';
-
   /**
    * The source color of the theme as an HCT color.
    */
@@ -161,7 +160,7 @@ export class DynamicScheme {
    */
   errorPalette: TonalPalette;
 
-  readonly colors: MaterialDynamicColors;
+  readonly colors: ColorSpecDelegate;
 
   constructor(args: DynamicSchemeOptions) {
     this.sourceColorArgb = args.sourceColorHct.toInt();
@@ -194,7 +193,7 @@ export class DynamicScheme {
                 args.sourceColorHct, this.isDark, this.contrastLevel) ??
         TonalPalette.fromHueAndChroma(25.0, 84.0);
 
-    this.colors = new MaterialDynamicColors();
+    this.colors = new ColorSpecDelegateImpl2025();
   }
 
   toString(): string {
